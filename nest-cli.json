@@ -14,7 +14,14 @@
       "entryFile": "main",
       "sourceRoot": "apps/identity/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/identity/tsconfig.app.json"
+        "tsConfigPath": "apps/identity/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../prisma/generated/**/*",
+            "outDir": "dist/apps/identity/apps/identity/prisma"
+          }
+        ],
+        "watchAssets": true
       }
     },
     "financial": {
@@ -23,7 +30,14 @@
       "entryFile": "main",
       "sourceRoot": "apps/financial/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/financial/tsconfig.app.json"
+        "tsConfigPath": "apps/financial/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../prisma/generated/**/*",
+            "outDir": "dist/apps/financial/apps/financial/prisma"
+          }
+        ],
+        "watchAssets": true
       }
     },
     "portfolio": {
@@ -32,7 +46,14 @@
       "entryFile": "main",
       "sourceRoot": "apps/portfolio/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/portfolio/tsconfig.app.json"
+        "tsConfigPath": "apps/portfolio/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../prisma/generated/**/*",
+            "outDir": "dist/apps/portfolio/apps/portfolio/prisma"
+          }
+        ],
+        "watchAssets": true
       }
     },
     "openfinance": {
@@ -41,7 +62,14 @@
       "entryFile": "main",
       "sourceRoot": "apps/openfinance/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/openfinance/tsconfig.app.json"
+        "tsConfigPath": "apps/openfinance/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../prisma/generated/**/*",
+            "outDir": "dist/apps/openfinance/apps/openfinance/prisma"
+          }
+        ],
+        "watchAssets": true
       }
     },
     "shared": {
