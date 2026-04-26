@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("IDENTITY_DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  phone        String?
+  birthDate    DateTime? @map("birth_date")
+  location     String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  preference UserPreference?
+
+  @@map("users")
+}
+
+model UserPreference {
+  id              String  @id @default(uuid())
+  userId          String  @unique @map("user_id")
+  defaultCurrency String  @default("BRL") @map("default_currency")
+  darkMode        Boolean @default(true) @map("dark_mode")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
