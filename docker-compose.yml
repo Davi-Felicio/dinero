@@ -1,0 +1,74 @@
+services:
+  postgres-identity:
+    image: postgres:16-alpine
+    container_name: dinero-postgres-identity
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: dinero_identity
+      POSTGRES_USER: dinero
+      POSTGRES_PASSWORD: dinero_dev
+    volumes:
+      - pgdata-identity:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dinero -d dinero_identity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-financial:
+    image: postgres:16-alpine
+    container_name: dinero-postgres-financial
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: dinero_financial
+      POSTGRES_USER: dinero
+      POSTGRES_PASSWORD: dinero_dev
+    volumes:
+      - pgdata-financial:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dinero -d dinero_financial"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-portfolio:
+    image: postgres:16-alpine
+    container_name: dinero-postgres-portfolio
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: dinero_portfolio
+      POSTGRES_USER: dinero
+      POSTGRES_PASSWORD: dinero_dev
+    volumes:
+      - pgdata-portfolio:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dinero -d dinero_portfolio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-openfinance:
+    image: postgres:16-alpine
+    container_name: dinero-postgres-openfinance
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_DB: dinero_openfinance
+      POSTGRES_USER: dinero
+      POSTGRES_PASSWORD: dinero_dev
+    volumes:
+      - pgdata-openfinance:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dinero -d dinero_openfinance"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata-identity:
+  pgdata-financial:
+  pgdata-portfolio:
+  pgdata-openfinance:

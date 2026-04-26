@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("FINANCIAL_DATABASE_URL")
+}
+
+model Card {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  name        String
+  brand       String
+  lastDigits  String   @map("last_digits")
+  currentBill Decimal  @default(0) @map("current_bill")
+  creditLimit Decimal  @map("credit_limit")
+  dueDay      Int      @map("due_day")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  transactions Transaction[]
+
+  @@map("cards")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  name      String
+  icon      String?
+  color     String?
+  budget    Decimal? @default(0)
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  transactions Transaction[]
+
+  @@map("categories")
+}
+
+model Transaction {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  type         String
+  amount       Decimal
+  currency     String    @default("BRL")
+  amountBrl    Decimal?  @map("amount_brl")
+  exchangeRate Decimal?  @map("exchange_rate")
+  description  String
+  merchant     String?
+  location     String?
+  date         DateTime
+  categoryId   String?   @map("category_id")
+  cardId       String?   @map("card_id")
+  syncStatus   String    @default("MANUAL") @map("sync_status")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  category Category? @relation(fields: [categoryId], references: [id])
+  card     Card?     @relation(fields: [cardId], references: [id])
+
+  @@map("transactions")
+}
