@@ -13,6 +13,9 @@ import { ListCardsUseCase } from './application/use-cases/list-cards.use-case';
 import { DeleteCardUseCase } from './application/use-cases/delete-card.use-case';
 import { CreateCategoryUseCase } from './application/use-cases/create-category.use-case';
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case';
+import { FindDuplicatesUseCase } from './application/use-cases/reconciliation/find-duplicates.use-case';
+import { ResolveDuplicateUseCase } from './application/use-cases/reconciliation/resolve-duplicate.use-case';
+import { ReconciliationController } from './infrastructure/adapters/inbound/reconciliation.controller';
 import { PrismaTransactionRepository } from './infrastructure/adapters/outbound/prisma-transaction.repository';
 import { PrismaCardRepository } from './infrastructure/adapters/outbound/prisma-card.repository';
 import { PrismaCategoryRepository } from './infrastructure/adapters/outbound/prisma-category.repository';
@@ -27,7 +30,7 @@ import { INJECTION_TOKENS } from './injection-tokens';
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  controllers: [HealthController, TransactionController, CardController, CategoryController],
+  controllers: [HealthController, TransactionController, CardController, CategoryController, ReconciliationController],
   providers: [
     JwtAuthGuard,
     CreateTransactionUseCase,
@@ -38,6 +41,8 @@ import { INJECTION_TOKENS } from './injection-tokens';
     DeleteCardUseCase,
     CreateCategoryUseCase,
     ListCategoriesUseCase,
+    FindDuplicatesUseCase,
+    ResolveDuplicateUseCase,
     {
       provide: INJECTION_TOKENS.TRANSACTION_REPOSITORY,
       useClass: PrismaTransactionRepository,
