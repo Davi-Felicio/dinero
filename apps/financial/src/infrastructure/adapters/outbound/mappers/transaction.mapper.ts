@@ -17,6 +17,8 @@ type TransactionPrismaModel = {
   categoryId: string | null;
   cardId: string | null;
   syncStatus: string;
+  localId: string | null;
+  deletedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -37,6 +39,8 @@ export class TransactionMapper {
         categoryId: raw.categoryId ?? undefined,
         cardId: raw.cardId ?? undefined,
         syncStatus: raw.syncStatus as SyncStatus,
+        localId: raw.localId ?? undefined,
+        deletedAt: raw.deletedAt ?? undefined,
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
       },
@@ -60,6 +64,8 @@ export class TransactionMapper {
       categoryId: t.categoryId ?? null,
       cardId: t.cardId ?? null,
       syncStatus: t.syncStatus,
+      localId: t.localId ?? null,
+      deletedAt: t.deletedAt ?? null,
       createdAt: t.createdAt,
       updatedAt: t.updatedAt,
     };

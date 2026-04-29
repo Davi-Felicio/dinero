@@ -17,6 +17,8 @@ export interface ITransactionProps {
   categoryId?: string;
   cardId?: string;
   syncStatus: SyncStatus;
+  localId?: string;
+  deletedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,10 +65,18 @@ export class TransactionEntity extends AggregateRoot<ITransactionProps> {
   get createdAt(): Date { return this.props.createdAt; }
   get updatedAt(): Date { return this.props.updatedAt; }
 
+  get localId(): string | undefined { return this.props.localId; }
+  get deletedAt(): Date | undefined { return this.props.deletedAt; }
+  get isDeleted(): boolean { return !!this.props.deletedAt; }
+
   isExpense(): boolean { return this.props.type === 'EXPENSE'; }
   isIncome(): boolean { return this.props.type === 'INCOME'; }
 
   markAsSynced(): void {
     Object.assign(this.props, { syncStatus: 'SYNCED', updatedAt: new Date() });
+  }
+
+  markAsDeleted(): void {
+    Object.assign(this.props, { deletedAt: new Date(), updatedAt: new Date() });
   }
 }
