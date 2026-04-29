@@ -10,6 +10,8 @@ import { ListTransactionsUseCase } from './application/use-cases/list-transactio
 import { DeleteTransactionUseCase } from './application/use-cases/delete-transaction.use-case';
 import { CreateCardUseCase } from './application/use-cases/create-card.use-case';
 import { ListCardsUseCase } from './application/use-cases/list-cards.use-case';
+import { GetCardUseCase } from './application/use-cases/get-card.use-case';
+import { UpdateCardUseCase } from './application/use-cases/update-card.use-case';
 import { DeleteCardUseCase } from './application/use-cases/delete-card.use-case';
 import { CreateCategoryUseCase } from './application/use-cases/create-category.use-case';
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case';
@@ -35,6 +37,8 @@ import { INJECTION_TOKENS } from './injection-tokens';
     DeleteTransactionUseCase,
     CreateCardUseCase,
     ListCardsUseCase,
+    GetCardUseCase,
+    UpdateCardUseCase,
     DeleteCardUseCase,
     CreateCategoryUseCase,
     ListCategoriesUseCase,
