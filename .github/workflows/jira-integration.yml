@@ -9,6 +9,7 @@ on:
 jobs:
   jira-transition:
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: Login no Jira
         uses: atlassian/gajira-login@v3

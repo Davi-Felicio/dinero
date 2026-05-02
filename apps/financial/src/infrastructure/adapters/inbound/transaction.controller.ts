@@ -64,8 +64,8 @@ export class TransactionController {
   @Get()
   async list(
     @Req() req: Request & { user: JwtPayload },
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), new ParseIntPipe({ min: 1 })) page: number,
+    @Query('limit', new DefaultValuePipe(20), new ParseIntPipe({ min: 1, max: 100 })) limit: number,
   ) {
     const result = await this.listTransactionsUseCase.execute({
       userId: req.user.sub,
