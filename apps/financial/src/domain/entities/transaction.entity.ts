@@ -17,6 +17,7 @@ export interface ITransactionProps {
   categoryId?: string;
   cardId?: string;
   syncStatus: SyncStatus;
+  deletedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,11 +28,11 @@ export class TransactionEntity extends AggregateRoot<ITransactionProps> {
   }
 
   static create(
-    props: Omit<ITransactionProps, 'syncStatus' | 'createdAt' | 'updatedAt'>,
+    props: Omit<ITransactionProps, 'syncStatus' | 'deletedAt' | 'createdAt' | 'updatedAt'>,
     id?: UniqueEntityID,
   ): TransactionEntity {
     if (!props.description || props.description.trim().length === 0) {
-      throw new Error('Description cannot be empty');
+      throw new Error('A descrição não pode estar vazia');
     }
     return new TransactionEntity(
       {
@@ -60,13 +61,23 @@ export class TransactionEntity extends AggregateRoot<ITransactionProps> {
   get categoryId(): string | undefined { return this.props.categoryId; }
   get cardId(): string | undefined { return this.props.cardId; }
   get syncStatus(): SyncStatus { return this.props.syncStatus; }
+  get deletedAt(): Date | undefined { return this.props.deletedAt; }
   get createdAt(): Date { return this.props.createdAt; }
   get updatedAt(): Date { return this.props.updatedAt; }
 
   isExpense(): boolean { return this.props.type === 'EXPENSE'; }
   isIncome(): boolean { return this.props.type === 'INCOME'; }
+  isDeleted(): boolean { return !!this.props.deletedAt; }
 
   markAsSynced(): void {
     Object.assign(this.props, { syncStatus: 'SYNCED', updatedAt: new Date() });
+  }
+
+  softDelete(): void {
+    Object.assign(this.props, { deletedAt: new Date(), updatedAt: new Date() });
+  }
+
+  update(fields: Partial<Pick<ITransactionProps, 'description' | 'amount' | 'categoryId' | 'merchant' | 'location' | 'date'>>): void {
+    Object.assign(this.props, { ...fields, updatedAt: new Date() });
   }
 }
