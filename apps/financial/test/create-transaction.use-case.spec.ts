@@ -1,6 +1,5 @@
-import { CreateTransactionUseCase } from '../src/application/use-cases/create-transaction.use-case';
+import { CreateTransactionUseCase, CreateTransactionInput } from '../src/application/use-cases/create-transaction.use-case';
 import { ITransactionRepository } from '../src/domain/repositories/transaction.repository';
-import { CreateTransactionDto } from '../src/application/dtos/create-transaction.dto';
 
 const mockRepository: jest.Mocked<ITransactionRepository> = {
   save: jest.fn(),
@@ -13,7 +12,7 @@ const mockRepository: jest.Mocked<ITransactionRepository> = {
 
 const makeUseCase = () => new CreateTransactionUseCase(mockRepository);
 
-const validDto: CreateTransactionDto = {
+const validInput: CreateTransactionInput = {
   userId: 'a0000000-0000-0000-0000-000000000001',
   type: 'EXPENSE',
   amount: 150.5,
@@ -27,7 +26,7 @@ describe('CreateTransactionUseCase', () => {
 
   it('cria e salva transação válida', async () => {
     mockRepository.save.mockResolvedValue();
-    const result = await makeUseCase().execute(validDto);
+    const result = await makeUseCase().execute(validInput);
 
     expect(result.isSuccess).toBe(true);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -39,20 +38,20 @@ describe('CreateTransactionUseCase', () => {
   });
 
   it('falha com valor zero', async () => {
-    const result = await makeUseCase().execute({ ...validDto, amount: 0 });
+    const result = await makeUseCase().execute({ ...validInput, amount: 0 });
     expect(result.isSuccess).toBe(false);
     expect(mockRepository.save).not.toHaveBeenCalled();
   });
 
   it('falha com descrição vazia', async () => {
-    const result = await makeUseCase().execute({ ...validDto, description: '' });
+    const result = await makeUseCase().execute({ ...validInput, description: '' });
     expect(result.isSuccess).toBe(false);
   });
 
   it('usa BRL como moeda padrão quando currency não informada', async () => {
     mockRepository.save.mockResolvedValue();
-    const { currency, ...dtoSemCurrency } = validDto;
-    const result = await makeUseCase().execute(dtoSemCurrency as CreateTransactionDto);
+    const { currency, ...inputSemCurrency } = validInput;
+    const result = await makeUseCase().execute(inputSemCurrency as CreateTransactionInput);
     expect(result.isSuccess).toBe(true);
     expect(result.getValue().currency).toBe('BRL');
   });

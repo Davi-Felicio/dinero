@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { IdentityModule } from './identity.module';
+import { HttpExceptionFilter } from '@dinero/shared';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(IdentityModule);
@@ -13,6 +14,7 @@ async function bootstrap(): Promise<void> {
       transform: true,
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.setGlobalPrefix('v1/identity');
 

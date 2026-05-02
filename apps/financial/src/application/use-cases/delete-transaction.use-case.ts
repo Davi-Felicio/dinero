@@ -17,9 +17,7 @@ export class DeleteTransactionUseCase implements IUseCase<DeleteTransactionInput
 
   async execute(input: DeleteTransactionInput): Promise<Result<void>> {
     const transaction = await this.transactionRepository.findByIdAndUserId(input.id, input.userId);
-    if (!transaction) {
-      return Result.fail('Transação não encontrada');
-    }
+    if (!transaction) return Result.fail('Transação não encontrada');
     await this.transactionRepository.softDelete(input.id);
     return Result.ok();
   }

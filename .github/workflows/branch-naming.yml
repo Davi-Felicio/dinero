@@ -7,6 +7,7 @@ on:
 jobs:
   check-branch-name:
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: Validar nome do branch
         run: |

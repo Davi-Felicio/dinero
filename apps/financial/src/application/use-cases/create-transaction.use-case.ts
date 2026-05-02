@@ -1,32 +1,51 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IUseCase, Result } from '@dinero/shared';
-import { TransactionEntity } from '../../domain/entities/transaction.entity';
 import { ITransactionRepository } from '../../domain/repositories/transaction.repository';
-import { Money } from '../../domain/value-objects/money.vo';
+import { TransactionEntity, TransactionType } from '../../domain/entities/transaction.entity';
+import { Money, Currency } from '../../domain/value-objects/money.vo';
 import { INJECTION_TOKENS } from '../../injection-tokens';
-import { CreateTransactionDto } from '../dtos/create-transaction.dto';
 import { TransactionResponseDto } from '../dtos/transaction-response.dto';
 
+export interface CreateTransactionInput {
+  userId: string;
+  type: TransactionType;
+  amount: number;
+  currency?: Currency;
+  amountBrl?: number;
+  exchangeRate?: number;
+  description: string;
+  merchant?: string;
+  location?: string;
+  date: string;
+  categoryId?: string;
+  cardId?: string;
+}
+
 @Injectable()
-export class CreateTransactionUseCase implements IUseCase<CreateTransactionDto, TransactionResponseDto> {
+export class CreateTransactionUseCase implements IUseCase<CreateTransactionInput, TransactionResponseDto> {
   constructor(
     @Inject(INJECTION_TOKENS.TRANSACTION_REPOSITORY)
     private readonly transactionRepository: ITransactionRepository,
   ) {}
 
-  async execute(dto: CreateTransactionDto): Promise<Result<TransactionResponseDto>> {
+  async execute(input: CreateTransactionInput): Promise<Result<TransactionResponseDto>> {
     try {
-      const amount = Money.create(dto.amount, dto.currency ?? 'BRL');
+      const currency = input.currency ?? 'BRL';
+      const money = Money.create(input.amount, currency);
+      const amountBrl = input.amountBrl ? Money.create(input.amountBrl, 'BRL') : undefined;
+
       const transaction = TransactionEntity.create({
-        userId: dto.userId,
-        type: dto.type,
-        amount,
-        description: dto.description,
-        date: new Date(dto.date),
-        merchant: dto.merchant,
-        location: dto.location,
-        categoryId: dto.categoryId,
-        cardId: dto.cardId,
+        userId: input.userId,
+        type: input.type,
+        amount: money,
+        amountBrl,
+        exchangeRate: input.exchangeRate,
+        description: input.description,
+        merchant: input.merchant,
+        location: input.location,
+        date: new Date(input.date),
+        categoryId: input.categoryId,
+        cardId: input.cardId,
       });
 
       await this.transactionRepository.save(transaction);

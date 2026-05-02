@@ -1,41 +1,58 @@
-import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  IsUUID,
+  MinLength,
+} from 'class-validator';
 import { TransactionType } from '../../domain/entities/transaction.entity';
 import { Currency } from '../../domain/value-objects/money.vo';
 
 export class CreateTransactionDto {
-  @IsUUID()
-  userId: string;
-
   @IsEnum(['INCOME', 'EXPENSE'])
-  type: TransactionType;
+  type!: TransactionType;
 
   @IsNumber()
-  @Min(0.01)
-  amount: number;
+  @IsPositive()
+  amount!: number;
 
-  @IsEnum(['BRL', 'USD', 'EUR', 'GBP'])
   @IsOptional()
+  @IsEnum(['BRL', 'USD', 'EUR', 'GBP'])
   currency?: Currency;
 
-  @IsString()
-  description: string;
-
-  @IsDateString()
-  date: string;
-
-  @IsString()
   @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  amountBrl?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  exchangeRate?: number;
+
+  @IsString()
+  @MinLength(1)
+  description!: string;
+
+  @IsOptional()
+  @IsString()
   merchant?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   location?: string;
 
-  @IsUUID()
+  @IsDateString()
+  date!: string;
+
   @IsOptional()
+  @IsUUID()
   categoryId?: string;
 
-  @IsUUID()
   @IsOptional()
+  @IsUUID()
   cardId?: string;
 }
