@@ -20,7 +20,7 @@ async function bootstrap(): Promise<void> {
 
   const port = process.env['FINANCIAL_PORT'] ?? 3002;
   await app.listen(port);
-  console.log(`[Financial] running on http://localhost:${port}`);
+  console.log(`[Financial] rodando em http://localhost:${port}`);
 }
 
 bootstrap();

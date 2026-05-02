@@ -20,7 +20,7 @@ export class CategoryEntity extends Entity<ICategoryProps> {
     id?: UniqueEntityID,
   ): CategoryEntity {
     if (!props.name || props.name.trim().length === 0) {
-      throw new Error('Category name cannot be empty');
+      throw new Error('O nome da categoria não pode estar vazio');
     }
     return new CategoryEntity({ ...props, createdAt: new Date() }, id);
   }

@@ -1,0 +1,23 @@
+name: Branch Naming Convention
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validar nome do branch
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          PATTERN="^(feature|bugfix|hotfix|chore|refactor|docs|test)\/[A-Z]+-[0-9]+-[a-z0-9-]+$"
+
+          if [[ "$BRANCH" =~ $PATTERN ]]; then
+            echo "Branch '$BRANCH' está no formato correto."
+          else
+            echo "::error::Branch '$BRANCH' não segue a convenção."
+            echo "::error::Use o padrão: feature/PIID-42-descricao-da-tarefa"
+            echo "::error::Prefixos válidos: feature, bugfix, hotfix, chore, refactor, docs, test"
+            exit 1
+          fi

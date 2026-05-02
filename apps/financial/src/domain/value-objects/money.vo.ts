@@ -13,8 +13,8 @@ export class Money extends ValueObject<IMoneyProps> {
   }
 
   static create(amount: number, currency: Currency = 'BRL'): Money {
-    if (amount < 0) {
-      throw new Error('Amount cannot be negative');
+    if (amount <= 0) {
+      throw new Error('O valor deve ser maior que zero');
     }
     return new Money({ amount: Math.round(amount * 100) / 100, currency });
   }
@@ -24,14 +24,14 @@ export class Money extends ValueObject<IMoneyProps> {
 
   add(other: Money): Money {
     if (this.currency !== other.currency) {
-      throw new Error(`Cannot add ${this.currency} and ${other.currency}`);
+      throw new Error(`Não é possível somar ${this.currency} com ${other.currency}`);
     }
     return Money.create(this.amount + other.amount, this.currency);
   }
 
   subtract(other: Money): Money {
     if (this.currency !== other.currency) {
-      throw new Error(`Cannot subtract ${this.currency} and ${other.currency}`);
+      throw new Error(`Não é possível subtrair ${this.currency} de ${other.currency}`);
     }
     return Money.create(this.amount - other.amount, this.currency);
   }

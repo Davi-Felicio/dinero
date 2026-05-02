@@ -17,21 +17,37 @@ export class PrismaTransactionRepository implements ITransactionRepository {
         description: data.description,
         amount: data.amount,
         currency: data.currency,
+        amountBrl: data.amountBrl,
+        exchangeRate: data.exchangeRate,
+        merchant: data.merchant,
+        location: data.location,
+        date: data.date,
         categoryId: data.categoryId,
+        cardId: data.cardId,
         syncStatus: data.syncStatus,
+        deletedAt: data.deletedAt,
         updatedAt: data.updatedAt,
       },
     });
   }
 
   async findById(id: string): Promise<TransactionEntity | null> {
-    const raw = await this.prisma.transaction.findUnique({ where: { id } });
+    const raw = await this.prisma.transaction.findFirst({
+      where: { id, deletedAt: null },
+    });
+    return raw ? TransactionMapper.toDomain(raw) : null;
+  }
+
+  async findByIdAndUserId(id: string, userId: string): Promise<TransactionEntity | null> {
+    const raw = await this.prisma.transaction.findFirst({
+      where: { id, userId, deletedAt: null },
+    });
     return raw ? TransactionMapper.toDomain(raw) : null;
   }
 
   async findAllByUserId(userId: string, page: number, limit: number): Promise<TransactionEntity[]> {
     const raws = await this.prisma.transaction.findMany({
-      where: { userId },
+      where: { userId, deletedAt: null },
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { date: 'desc' },
@@ -40,10 +56,13 @@ export class PrismaTransactionRepository implements ITransactionRepository {
   }
 
   async countByUserId(userId: string): Promise<number> {
-    return this.prisma.transaction.count({ where: { userId } });
+    return this.prisma.transaction.count({ where: { userId, deletedAt: null } });
   }
 
-  async delete(id: string): Promise<void> {
-    await this.prisma.transaction.delete({ where: { id } });
+  async softDelete(id: string): Promise<void> {
+    await this.prisma.transaction.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 }
