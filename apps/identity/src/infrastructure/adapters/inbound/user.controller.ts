@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
   Put,
   Req,
   UnprocessableEntityException,
@@ -42,6 +44,13 @@ export class UserController {
       location: dto.location,
     });
     if (result.isFailure()) throw new UnprocessableEntityException(result.error);
+    return { data: result.getValue() };
+  }
+
+  @Get(':id')
+  async getById(@Param('id', ParseUUIDPipe) id: string) {
+    const result = await this.getProfileUseCase.execute({ userId: id });
+    if (result.isFailure()) throw new NotFoundException(result.error);
     return { data: result.getValue() };
   }
 }
