@@ -4,6 +4,7 @@ import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { HealthController } from './infrastructure/adapters/inbound/health.controller';
 import { AuthController } from './infrastructure/adapters/inbound/auth.controller';
 import { UserController } from './infrastructure/adapters/inbound/user.controller';
+import { PreferenceController } from './infrastructure/adapters/inbound/preference.controller';
 import { HealthCheckUseCase } from './application/use-cases/health-check.use-case';
 import { RegisterUserUseCase } from './application/use-cases/register-user.use-case';
 import { LoginUseCase } from './application/use-cases/login.use-case';
@@ -43,7 +44,7 @@ const parseJwtExpiresIn = (value: string | undefined): JwtExpiresIn => {
       signOptions: { expiresIn: parseJwtExpiresIn(process.env['JWT_EXPIRES_IN']) },
     }),
   ],
-  controllers: [HealthController, AuthController, UserController],
+  controllers: [HealthController, AuthController, UserController, PreferenceController],
   providers: [
     HealthCheckUseCase,
     RegisterUserUseCase,
