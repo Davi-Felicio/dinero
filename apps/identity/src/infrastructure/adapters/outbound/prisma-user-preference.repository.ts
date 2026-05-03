@@ -14,11 +14,11 @@ export class PrismaUserPreferenceRepository implements IUserPreferenceRepository
       create: {
         id: pref.id.toValue(),
         userId: pref.userId,
-        defaultCurrency: pref.defaultCurrency,
+        defaultCurrency: pref.defaultCurrency.code,
         darkMode: pref.darkMode,
       },
       update: {
-        defaultCurrency: pref.defaultCurrency,
+        defaultCurrency: pref.defaultCurrency.code,
         darkMode: pref.darkMode,
       },
     });
