@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IUseCase, Result } from '@dinero/shared';
 import { IUserRepository } from '../../domain/repositories/user.repository';
+import { IUserPreferenceRepository } from '../../domain/repositories/user-preference.repository';
 import { INJECTION_TOKENS } from '../../injection-tokens';
 
 export interface GetProfileInput {
@@ -14,6 +15,7 @@ export interface GetProfileOutput {
   phone?: string;
   birthDate?: string;
   location?: string;
+  defaultCurrency: string;
   createdAt: string;
 }
 
@@ -22,6 +24,8 @@ export class GetProfileUseCase implements IUseCase<GetProfileInput, GetProfileOu
   constructor(
     @Inject(INJECTION_TOKENS.USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
+    @Inject(INJECTION_TOKENS.USER_PREFERENCE_REPOSITORY)
+    private readonly userPreferenceRepository: IUserPreferenceRepository,
   ) {}
 
   async execute(input: GetProfileInput): Promise<Result<GetProfileOutput>> {
@@ -30,6 +34,9 @@ export class GetProfileUseCase implements IUseCase<GetProfileInput, GetProfileOu
       return Result.fail('User not found');
     }
 
+    const pref = await this.userPreferenceRepository.findByUserId(input.userId);
+    const defaultCurrency = pref?.defaultCurrency.code ?? 'BRL';
+
     return Result.ok({
       id: user.id.toValue(),
       name: user.name,
@@ -37,6 +44,7 @@ export class GetProfileUseCase implements IUseCase<GetProfileInput, GetProfileOu
       phone: user.phone,
       birthDate: user.birthDate?.toISOString(),
       location: user.location,
+      defaultCurrency,
       createdAt: user.createdAt.toISOString(),
     });
   }
