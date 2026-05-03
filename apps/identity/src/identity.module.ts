@@ -10,6 +10,7 @@ import { LoginUseCase } from './application/use-cases/login.use-case';
 import { GetProfileUseCase } from './application/use-cases/get-profile.use-case';
 import { UpdateProfileUseCase } from './application/use-cases/update-profile.use-case';
 import { GetUserPreferenceUseCase } from './application/use-cases/get-user-preference.use-case';
+import { UpdateCurrencyUseCase } from './application/use-cases/update-currency.use-case';
 import { PrismaUserRepository } from './infrastructure/adapters/outbound/prisma-user.repository';
 import { PrismaUserPreferenceRepository } from './infrastructure/adapters/outbound/prisma-user-preference.repository';
 import { BcryptPasswordHasher } from './infrastructure/adapters/outbound/bcrypt-password-hasher';
@@ -50,6 +51,7 @@ const parseJwtExpiresIn = (value: string | undefined): JwtExpiresIn => {
     GetProfileUseCase,
     UpdateProfileUseCase,
     GetUserPreferenceUseCase,
+    UpdateCurrencyUseCase,
     JwtAuthGuard,
     {
       provide: INJECTION_TOKENS.USER_REPOSITORY,
