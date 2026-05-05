@@ -5,6 +5,7 @@ import { HealthController } from './infrastructure/adapters/inbound/health.contr
 import { TransactionController } from './infrastructure/adapters/inbound/transaction.controller';
 import { CardController } from './infrastructure/adapters/inbound/card.controller';
 import { CategoryController } from './infrastructure/adapters/inbound/category.controller';
+import { SyncController } from './infrastructure/adapters/inbound/sync.controller';
 import { CreateTransactionUseCase } from './application/use-cases/create-transaction.use-case';
 import { ListTransactionsUseCase } from './application/use-cases/list-transactions.use-case';
 import { GetTransactionByIdUseCase } from './application/use-cases/get-transaction-by-id.use-case';
@@ -17,6 +18,9 @@ import { UpdateCardUseCase } from './application/use-cases/update-card.use-case'
 import { DeleteCardUseCase } from './application/use-cases/delete-card.use-case';
 import { CreateCategoryUseCase } from './application/use-cases/create-category.use-case';
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case';
+import { SyncPushUseCase } from './application/use-cases/sync/sync-push.use-case';
+import { SyncPullUseCase } from './application/use-cases/sync/sync-pull.use-case';
+import { SyncStatusUseCase } from './application/use-cases/sync/sync-status.use-case';
 import { PrismaTransactionRepository } from './infrastructure/adapters/outbound/prisma-transaction.repository';
 import { PrismaCardRepository } from './infrastructure/adapters/outbound/prisma-card.repository';
 import { PrismaCategoryRepository } from './infrastructure/adapters/outbound/prisma-category.repository';
@@ -31,7 +35,7 @@ import { INJECTION_TOKENS } from './injection-tokens';
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  controllers: [HealthController, TransactionController, CardController, CategoryController],
+  controllers: [HealthController, TransactionController, CardController, CategoryController, SyncController],
   providers: [
     JwtAuthGuard,
     CreateTransactionUseCase,
@@ -46,6 +50,9 @@ import { INJECTION_TOKENS } from './injection-tokens';
     DeleteCardUseCase,
     CreateCategoryUseCase,
     ListCategoriesUseCase,
+    SyncPushUseCase,
+    SyncPullUseCase,
+    SyncStatusUseCase,
     {
       provide: INJECTION_TOKENS.TRANSACTION_REPOSITORY,
       useClass: PrismaTransactionRepository,

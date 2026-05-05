@@ -55,6 +55,7 @@ model Transaction {
   categoryId   String?   @map("category_id")
   cardId       String?   @map("card_id")
   syncStatus   String    @default("MANUAL") @map("sync_status")
+  localId      String?   @map("local_id")
   deletedAt    DateTime? @map("deleted_at")
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
@@ -62,5 +63,20 @@ model Transaction {
   category Category? @relation(fields: [categoryId], references: [id])
   card     Card?     @relation(fields: [cardId], references: [id])
 
+  @@index([userId, updatedAt])
+  @@index([userId, localId])
   @@map("transactions")
+}
+
+model SyncLog {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  direction    String
+  recordCount  Int      @map("record_count")
+  conflicts    Int      @default(0)
+  errorMessage String?  @map("error_message")
+  syncedAt     DateTime @default(now()) @map("synced_at")
+
+  @@index([userId, syncedAt])
+  @@map("sync_logs")
 }
