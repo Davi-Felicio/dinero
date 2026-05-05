@@ -1,8 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
   Put,
   Req,
   UnprocessableEntityException,
@@ -12,6 +17,7 @@ import { Request } from 'express';
 import { JwtAuthGuard, JwtPayload } from '@dinero/shared';
 import { GetProfileUseCase } from '../../../application/use-cases/get-profile.use-case';
 import { UpdateProfileUseCase } from '../../../application/use-cases/update-profile.use-case';
+import { DeleteAccountUseCase } from '../../../application/use-cases/delete-account.use-case';
 import { UpdateProfileDto } from '../../../application/dtos/update-profile.dto';
 
 @Controller('users')
@@ -20,6 +26,7 @@ export class UserController {
   constructor(
     private readonly getProfileUseCase: GetProfileUseCase,
     private readonly updateProfileUseCase: UpdateProfileUseCase,
+    private readonly deleteAccountUseCase: DeleteAccountUseCase,
   ) {}
 
   @Get('me')
@@ -42,6 +49,20 @@ export class UserController {
       location: dto.location,
     });
     if (result.isFailure()) throw new UnprocessableEntityException(result.error);
+    return { data: result.getValue() };
+  }
+
+  @Delete('me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteMe(@Req() req: Request & { user: JwtPayload }) {
+    const result = await this.deleteAccountUseCase.execute({ userId: req.user.sub });
+    if (result.isFailure()) throw new NotFoundException(result.error);
+  }
+
+  @Get(':id')
+  async getById(@Param('id', ParseUUIDPipe) id: string) {
+    const result = await this.getProfileUseCase.execute({ userId: id });
+    if (result.isFailure()) throw new NotFoundException(result.error);
     return { data: result.getValue() };
   }
 }
