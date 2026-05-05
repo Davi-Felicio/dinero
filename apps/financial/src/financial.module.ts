@@ -18,6 +18,9 @@ import { UpdateCardUseCase } from './application/use-cases/update-card.use-case'
 import { DeleteCardUseCase } from './application/use-cases/delete-card.use-case';
 import { CreateCategoryUseCase } from './application/use-cases/create-category.use-case';
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case';
+import { FindDuplicatesUseCase } from './application/use-cases/reconciliation/find-duplicates.use-case';
+import { ResolveDuplicateUseCase } from './application/use-cases/reconciliation/resolve-duplicate.use-case';
+import { ReconciliationController } from './infrastructure/adapters/inbound/reconciliation.controller';
 import { SyncPushUseCase } from './application/use-cases/sync/sync-push.use-case';
 import { SyncPullUseCase } from './application/use-cases/sync/sync-pull.use-case';
 import { SyncStatusUseCase } from './application/use-cases/sync/sync-status.use-case';
@@ -35,6 +38,7 @@ import { INJECTION_TOKENS } from './injection-tokens';
       signOptions: { expiresIn: '7d' },
     }),
   ],
+  controllers: [HealthController, TransactionController, CardController, CategoryController, ReconciliationController],
   controllers: [HealthController, TransactionController, CardController, CategoryController, SyncController],
   providers: [
     JwtAuthGuard,
@@ -50,6 +54,8 @@ import { INJECTION_TOKENS } from './injection-tokens';
     DeleteCardUseCase,
     CreateCategoryUseCase,
     ListCategoriesUseCase,
+    FindDuplicatesUseCase,
+    ResolveDuplicateUseCase,
     SyncPushUseCase,
     SyncPullUseCase,
     SyncStatusUseCase,
