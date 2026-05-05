@@ -19,13 +19,13 @@ export class JwtAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractToken(request);
-    if (!token) throw new UnauthorizedException('Missing authentication token');
+    if (!token) throw new UnauthorizedException('Token de autenticação não informado');
     try {
       const payload = this.jwtService.verify<JwtPayload>(token);
       (request as any).user = payload;
       return true;
     } catch {
-      throw new UnauthorizedException('Invalid or expired token');
+      throw new UnauthorizedException('Token inválido ou expirado');
     }
   }
 
