@@ -5,17 +5,25 @@ import { HealthController } from './infrastructure/adapters/inbound/health.contr
 import { TransactionController } from './infrastructure/adapters/inbound/transaction.controller';
 import { CardController } from './infrastructure/adapters/inbound/card.controller';
 import { CategoryController } from './infrastructure/adapters/inbound/category.controller';
+import { SyncController } from './infrastructure/adapters/inbound/sync.controller';
 import { CreateTransactionUseCase } from './application/use-cases/create-transaction.use-case';
 import { ListTransactionsUseCase } from './application/use-cases/list-transactions.use-case';
+import { GetTransactionByIdUseCase } from './application/use-cases/get-transaction-by-id.use-case';
+import { UpdateTransactionUseCase } from './application/use-cases/update-transaction.use-case';
 import { DeleteTransactionUseCase } from './application/use-cases/delete-transaction.use-case';
 import { CreateCardUseCase } from './application/use-cases/create-card.use-case';
 import { ListCardsUseCase } from './application/use-cases/list-cards.use-case';
+import { GetCardUseCase } from './application/use-cases/get-card.use-case';
+import { UpdateCardUseCase } from './application/use-cases/update-card.use-case';
 import { DeleteCardUseCase } from './application/use-cases/delete-card.use-case';
 import { CreateCategoryUseCase } from './application/use-cases/create-category.use-case';
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case';
 import { FindDuplicatesUseCase } from './application/use-cases/reconciliation/find-duplicates.use-case';
 import { ResolveDuplicateUseCase } from './application/use-cases/reconciliation/resolve-duplicate.use-case';
 import { ReconciliationController } from './infrastructure/adapters/inbound/reconciliation.controller';
+import { SyncPushUseCase } from './application/use-cases/sync/sync-push.use-case';
+import { SyncPullUseCase } from './application/use-cases/sync/sync-pull.use-case';
+import { SyncStatusUseCase } from './application/use-cases/sync/sync-status.use-case';
 import { PrismaTransactionRepository } from './infrastructure/adapters/outbound/prisma-transaction.repository';
 import { PrismaCardRepository } from './infrastructure/adapters/outbound/prisma-card.repository';
 import { PrismaCategoryRepository } from './infrastructure/adapters/outbound/prisma-category.repository';
@@ -31,18 +39,26 @@ import { INJECTION_TOKENS } from './injection-tokens';
     }),
   ],
   controllers: [HealthController, TransactionController, CardController, CategoryController, ReconciliationController],
+  controllers: [HealthController, TransactionController, CardController, CategoryController, SyncController],
   providers: [
     JwtAuthGuard,
     CreateTransactionUseCase,
     ListTransactionsUseCase,
+    GetTransactionByIdUseCase,
+    UpdateTransactionUseCase,
     DeleteTransactionUseCase,
     CreateCardUseCase,
     ListCardsUseCase,
+    GetCardUseCase,
+    UpdateCardUseCase,
     DeleteCardUseCase,
     CreateCategoryUseCase,
     ListCategoriesUseCase,
     FindDuplicatesUseCase,
     ResolveDuplicateUseCase,
+    SyncPushUseCase,
+    SyncPullUseCase,
+    SyncStatusUseCase,
     {
       provide: INJECTION_TOKENS.TRANSACTION_REPOSITORY,
       useClass: PrismaTransactionRepository,

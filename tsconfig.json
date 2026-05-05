@@ -18,6 +18,7 @@
     "paths": {
       "@dinero/shared": ["libs/shared/src"],
       "@dinero/shared/*": ["libs/shared/src/*"]
-    }
+    },
+    "ignoreDeprecations": "6.0"
   }
 }

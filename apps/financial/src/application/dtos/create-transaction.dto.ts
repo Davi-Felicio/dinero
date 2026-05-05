@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
 import { TransactionType } from '../../domain/entities/transaction.entity';
@@ -48,10 +49,10 @@ export class CreateTransactionDto {
   date!: string;
 
   @IsOptional()
-  @IsString()
+  @IsUUID()
   categoryId?: string;
 
   @IsOptional()
-  @IsString()
+  @IsUUID()
   cardId?: string;
 }
