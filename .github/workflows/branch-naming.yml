@@ -12,7 +12,7 @@ jobs:
       - name: Validar nome do branch
         run: |
           BRANCH="${{ github.head_ref }}"
-          PATTERN="^(feature|bugfix|hotfix|chore|refactor|docs|test)\/[A-Z]+-[0-9]+-[a-z0-9-]+$"
+          PATTERN="^(feature|bugfix|hotfix|chore|refactor|docs|test)\/[A-Z]+-[0-9]+-[a-zA-Z0-9À-ÿ-]+$"
 
           if [[ "$BRANCH" =~ $PATTERN ]]; then
             echo "Branch '$BRANCH' está no formato correto."
