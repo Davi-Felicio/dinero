@@ -8,9 +8,13 @@ import { CategoryController } from './infrastructure/adapters/inbound/category.c
 import { SyncController } from './infrastructure/adapters/inbound/sync.controller';
 import { CreateTransactionUseCase } from './application/use-cases/create-transaction.use-case';
 import { ListTransactionsUseCase } from './application/use-cases/list-transactions.use-case';
+import { GetTransactionByIdUseCase } from './application/use-cases/get-transaction-by-id.use-case';
+import { UpdateTransactionUseCase } from './application/use-cases/update-transaction.use-case';
 import { DeleteTransactionUseCase } from './application/use-cases/delete-transaction.use-case';
 import { CreateCardUseCase } from './application/use-cases/create-card.use-case';
 import { ListCardsUseCase } from './application/use-cases/list-cards.use-case';
+import { GetCardUseCase } from './application/use-cases/get-card.use-case';
+import { UpdateCardUseCase } from './application/use-cases/update-card.use-case';
 import { DeleteCardUseCase } from './application/use-cases/delete-card.use-case';
 import { CreateCategoryUseCase } from './application/use-cases/create-category.use-case';
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case';
@@ -36,9 +40,13 @@ import { INJECTION_TOKENS } from './injection-tokens';
     JwtAuthGuard,
     CreateTransactionUseCase,
     ListTransactionsUseCase,
+    GetTransactionByIdUseCase,
+    UpdateTransactionUseCase,
     DeleteTransactionUseCase,
     CreateCardUseCase,
     ListCardsUseCase,
+    GetCardUseCase,
+    UpdateCardUseCase,
     DeleteCardUseCase,
     CreateCategoryUseCase,
     ListCategoriesUseCase,

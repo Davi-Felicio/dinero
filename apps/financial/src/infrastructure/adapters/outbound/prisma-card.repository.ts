@@ -15,7 +15,11 @@ export class PrismaCardRepository implements ICardRepository {
       create: data,
       update: {
         name: data.name,
+        brand: data.brand,
+        lastDigits: data.lastDigits,
         currentBill: data.currentBill,
+        creditLimit: data.creditLimit,
+        dueDay: data.dueDay,
         updatedAt: data.updatedAt,
       },
     });

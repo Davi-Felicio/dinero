@@ -23,10 +23,10 @@ export class CardEntity extends AggregateRoot<ICardProps> {
     id?: UniqueEntityID,
   ): CardEntity {
     if (props.dueDay < 1 || props.dueDay > 31) {
-      throw new Error('Due day must be between 1 and 31');
+      throw new Error('O dia de vencimento deve ser entre 1 e 31');
     }
     if (!/^\d{4}$/.test(props.lastDigits)) {
-      throw new Error('Last digits must be exactly 4 digits');
+      throw new Error('Os últimos dígitos devem ter exatamente 4 números');
     }
     return new CardEntity(
       {
@@ -69,8 +69,21 @@ export class CardEntity extends AggregateRoot<ICardProps> {
   addToBill(amount: Money): void {
     const newBill = this.props.currentBill.add(amount);
     if (newBill.isGreaterThan(this.props.creditLimit)) {
-      throw new Error('Charge exceeds credit limit');
+      throw new Error('O lançamento ultrapassa o limite de crédito');
     }
     Object.assign(this.props, { currentBill: newBill, updatedAt: new Date() });
+  }
+
+  update(changes: Partial<Pick<ICardProps, 'name' | 'brand' | 'lastDigits' | 'dueDay' | 'creditLimit'>>): void {
+    if (changes.dueDay !== undefined && (changes.dueDay < 1 || changes.dueDay > 31)) {
+      throw new Error('Due day must be between 1 and 31');
+    }
+    if (changes.lastDigits !== undefined && !/^\d{4}$/.test(changes.lastDigits)) {
+      throw new Error('Last digits must be exactly 4 digits');
+    }
+    const defined = Object.fromEntries(
+      Object.entries(changes).filter(([, v]) => v !== undefined),
+    ) as Partial<Pick<ICardProps, 'name' | 'brand' | 'lastDigits' | 'dueDay' | 'creditLimit'>>;
+    Object.assign(this.props, { ...defined, updatedAt: new Date() });
   }
 }

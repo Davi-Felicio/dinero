@@ -4,11 +4,15 @@ import { PrismaModule } from './infrastructure/prisma/prisma.module';
 import { HealthController } from './infrastructure/adapters/inbound/health.controller';
 import { AuthController } from './infrastructure/adapters/inbound/auth.controller';
 import { UserController } from './infrastructure/adapters/inbound/user.controller';
+import { PreferenceController } from './infrastructure/adapters/inbound/preference.controller';
 import { HealthCheckUseCase } from './application/use-cases/health-check.use-case';
 import { RegisterUserUseCase } from './application/use-cases/register-user.use-case';
 import { LoginUseCase } from './application/use-cases/login.use-case';
 import { GetProfileUseCase } from './application/use-cases/get-profile.use-case';
 import { UpdateProfileUseCase } from './application/use-cases/update-profile.use-case';
+import { GetUserPreferenceUseCase } from './application/use-cases/get-user-preference.use-case';
+import { UpdateCurrencyUseCase } from './application/use-cases/update-currency.use-case';
+import { DeleteAccountUseCase } from './application/use-cases/delete-account.use-case';
 import { PrismaUserRepository } from './infrastructure/adapters/outbound/prisma-user.repository';
 import { PrismaUserPreferenceRepository } from './infrastructure/adapters/outbound/prisma-user-preference.repository';
 import { BcryptPasswordHasher } from './infrastructure/adapters/outbound/bcrypt-password-hasher';
@@ -41,13 +45,16 @@ const parseJwtExpiresIn = (value: string | undefined): JwtExpiresIn => {
       signOptions: { expiresIn: parseJwtExpiresIn(process.env['JWT_EXPIRES_IN']) },
     }),
   ],
-  controllers: [HealthController, AuthController, UserController],
+  controllers: [HealthController, AuthController, UserController, PreferenceController],
   providers: [
     HealthCheckUseCase,
     RegisterUserUseCase,
     LoginUseCase,
     GetProfileUseCase,
     UpdateProfileUseCase,
+    GetUserPreferenceUseCase,
+    UpdateCurrencyUseCase,
+    DeleteAccountUseCase,
     JwtAuthGuard,
     {
       provide: INJECTION_TOKENS.USER_REPOSITORY,
