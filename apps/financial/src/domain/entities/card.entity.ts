@@ -73,4 +73,17 @@ export class CardEntity extends AggregateRoot<ICardProps> {
     }
     Object.assign(this.props, { currentBill: newBill, updatedAt: new Date() });
   }
+
+  update(changes: Partial<Pick<ICardProps, 'name' | 'brand' | 'lastDigits' | 'dueDay' | 'creditLimit'>>): void {
+    if (changes.dueDay !== undefined && (changes.dueDay < 1 || changes.dueDay > 31)) {
+      throw new Error('Due day must be between 1 and 31');
+    }
+    if (changes.lastDigits !== undefined && !/^\d{4}$/.test(changes.lastDigits)) {
+      throw new Error('Last digits must be exactly 4 digits');
+    }
+    const defined = Object.fromEntries(
+      Object.entries(changes).filter(([, v]) => v !== undefined),
+    ) as Partial<Pick<ICardProps, 'name' | 'brand' | 'lastDigits' | 'dueDay' | 'creditLimit'>>;
+    Object.assign(this.props, { ...defined, updatedAt: new Date() });
+  }
 }
