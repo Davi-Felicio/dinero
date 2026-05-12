@@ -6,6 +6,8 @@ import { TransactionController } from './infrastructure/adapters/inbound/transac
 import { CardController } from './infrastructure/adapters/inbound/card.controller';
 import { CategoryController } from './infrastructure/adapters/inbound/category.controller';
 import { SyncController } from './infrastructure/adapters/inbound/sync.controller';
+import { BalanceController } from './infrastructure/adapters/inbound/balance.controller';
+import { GetBalanceSummaryUseCase } from './application/use-cases/get-balance-summary.use-case';
 import { CreateTransactionUseCase } from './application/use-cases/create-transaction.use-case';
 import { ListTransactionsUseCase } from './application/use-cases/list-transactions.use-case';
 import { GetTransactionByIdUseCase } from './application/use-cases/get-transaction-by-id.use-case';
@@ -38,10 +40,10 @@ import { INJECTION_TOKENS } from './injection-tokens';
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  controllers: [HealthController, TransactionController, CardController, CategoryController, ReconciliationController],
-  controllers: [HealthController, TransactionController, CardController, CategoryController, SyncController],
+  controllers: [HealthController, TransactionController, CardController, CategoryController, ReconciliationController, SyncController, BalanceController],
   providers: [
     JwtAuthGuard,
+    GetBalanceSummaryUseCase,
     CreateTransactionUseCase,
     ListTransactionsUseCase,
     GetTransactionByIdUseCase,

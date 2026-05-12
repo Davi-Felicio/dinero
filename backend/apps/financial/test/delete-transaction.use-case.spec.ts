@@ -10,6 +10,7 @@ const mockRepository: jest.Mocked<ITransactionRepository> = {
   findAllByUserId: jest.fn(),
   countByUserId: jest.fn(),
   softDelete: jest.fn(),
+  getBalanceSummary: jest.fn(),
 };
 
 const makeUseCase = () => new DeleteTransactionUseCase(mockRepository);

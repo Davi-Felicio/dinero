@@ -1,6 +1,5 @@
 -- AlterTable
-ALTER TABLE "transactions" ADD COLUMN     "deleted_at" TIMESTAMP(3),
-ADD COLUMN     "local_id" TEXT;
+ALTER TABLE "transactions" ADD COLUMN     "local_id" TEXT;
 
 -- CreateTable
 CREATE TABLE "sync_logs" (

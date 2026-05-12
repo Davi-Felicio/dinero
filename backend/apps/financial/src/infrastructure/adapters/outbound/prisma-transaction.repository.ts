@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { ITransactionRepository } from '../../../domain/repositories/transaction.repository';
+import { BalanceSummary, ITransactionRepository } from '../../../domain/repositories/transaction.repository';
 import { TransactionEntity } from '../../../domain/entities/transaction.entity';
 import { TransactionMapper } from './mappers/transaction.mapper';
 
@@ -64,5 +64,46 @@ export class PrismaTransactionRepository implements ITransactionRepository {
       where: { id },
       data: { deletedAt: new Date() },
     });
+  }
+
+  async getBalanceSummary(userId: string, startDate?: Date, endDate?: Date): Promise<BalanceSummary> {
+    const dateFilter = {
+      ...(startDate ? { gte: startDate } : {}),
+      ...(endDate ? { lte: endDate } : {}),
+    };
+    const baseWhere = {
+      userId,
+      deletedAt: null,
+      ...(startDate || endDate ? { date: dateFilter } : {}),
+    };
+
+    const [brlIncome, foreignIncome, brlExpense, foreignExpense] = await Promise.all([
+      this.prisma.transaction.aggregate({
+        where: { ...baseWhere, type: 'INCOME', currency: 'BRL' },
+        _sum: { amount: true },
+      }),
+      this.prisma.transaction.aggregate({
+        where: { ...baseWhere, type: 'INCOME', currency: { not: 'BRL' } },
+        _sum: { amountBrl: true },
+      }),
+      this.prisma.transaction.aggregate({
+        where: { ...baseWhere, type: 'EXPENSE', currency: 'BRL' },
+        _sum: { amount: true },
+      }),
+      this.prisma.transaction.aggregate({
+        where: { ...baseWhere, type: 'EXPENSE', currency: { not: 'BRL' } },
+        _sum: { amountBrl: true },
+      }),
+    ]);
+
+    const totalIncome =
+      Number(brlIncome._sum.amount ?? 0) +
+      Number(foreignIncome._sum.amountBrl ?? 0);
+
+    const totalExpenses =
+      Number(brlExpense._sum.amount ?? 0) +
+      Number(foreignExpense._sum.amountBrl ?? 0);
+
+    return { totalIncome, totalExpenses };
   }
 }

@@ -1,5 +1,10 @@
 import { TransactionEntity } from '../entities/transaction.entity';
 
+export interface BalanceSummary {
+  totalIncome: number;
+  totalExpenses: number;
+}
+
 export interface ITransactionRepository {
   save(transaction: TransactionEntity): Promise<void>;
   findById(id: string): Promise<TransactionEntity | null>;
@@ -7,4 +12,5 @@ export interface ITransactionRepository {
   findAllByUserId(userId: string, page: number, limit: number): Promise<TransactionEntity[]>;
   countByUserId(userId: string): Promise<number>;
   softDelete(id: string): Promise<void>;
+  getBalanceSummary(userId: string, startDate?: Date, endDate?: Date): Promise<BalanceSummary>;
 }

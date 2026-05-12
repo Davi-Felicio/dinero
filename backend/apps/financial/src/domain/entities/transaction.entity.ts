@@ -67,8 +67,6 @@ export class TransactionEntity extends AggregateRoot<ITransactionProps> {
   get updatedAt(): Date { return this.props.updatedAt; }
 
   get localId(): string | undefined { return this.props.localId; }
-  get deletedAt(): Date | undefined { return this.props.deletedAt; }
-  get isDeleted(): boolean { return !!this.props.deletedAt; }
 
   isExpense(): boolean { return this.props.type === 'EXPENSE'; }
   isIncome(): boolean { return this.props.type === 'INCOME'; }
