@@ -19,6 +19,6 @@
       "@dinero/shared": ["libs/shared/src"],
       "@dinero/shared/*": ["libs/shared/src/*"]
     },
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "5.0"
   }
 }
