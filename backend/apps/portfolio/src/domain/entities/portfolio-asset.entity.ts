@@ -24,22 +24,31 @@ export class PortfolioAssetEntity extends AggregateRoot<IPortfolioAssetProps> {
     if (props.averagePrice <= 0) {
       throw new Error('Average price must be greater than 0');
     }
-    return new PortfolioAssetEntity(
-      { ...props, createdAt: new Date(), updatedAt: new Date() },
-      id,
-    );
+    return new PortfolioAssetEntity({ ...props, createdAt: new Date(), updatedAt: new Date() }, id);
   }
 
   static reconstitute(props: IPortfolioAssetProps, id: UniqueEntityID): PortfolioAssetEntity {
     return new PortfolioAssetEntity(props, id);
   }
 
-  get userId(): string { return this.props.userId; }
-  get assetId(): string { return this.props.assetId; }
-  get quantity(): number { return this.props.quantity; }
-  get averagePrice(): number { return this.props.averagePrice; }
-  get createdAt(): Date { return this.props.createdAt; }
-  get updatedAt(): Date { return this.props.updatedAt; }
+  get userId(): string {
+    return this.props.userId;
+  }
+  get assetId(): string {
+    return this.props.assetId;
+  }
+  get quantity(): number {
+    return this.props.quantity;
+  }
+  get averagePrice(): number {
+    return this.props.averagePrice;
+  }
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+  get updatedAt(): Date {
+    return this.props.updatedAt;
+  }
 
   get totalCost(): number {
     return this.props.quantity * this.props.averagePrice;
@@ -58,7 +67,11 @@ export class PortfolioAssetEntity extends AggregateRoot<IPortfolioAssetProps> {
 
   removePosition(quantity: number): void {
     if (quantity <= 0) throw new Error('Quantity must be greater than 0');
-    if (quantity > this.props.quantity) throw new Error('Insufficient quantity');
-    Object.assign(this.props, { quantity: this.props.quantity - quantity, updatedAt: new Date() });
+    if (quantity - this.props.quantity > 0.000001) throw new Error('Insufficient quantity');
+    const remainingQuantity = this.props.quantity - quantity;
+    Object.assign(this.props, {
+      quantity: remainingQuantity < 0.000001 ? 0 : remainingQuantity,
+      updatedAt: new Date(),
+    });
   }
 }

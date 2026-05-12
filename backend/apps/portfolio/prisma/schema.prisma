@@ -13,9 +13,13 @@ model Asset {
   ticker    String   @unique
   name      String
   type      String
+  currency  String   @default("BRL")
+  logoUrl   String?  @map("logo_url")
+  sector    String?
   createdAt DateTime @default(now()) @map("created_at")
 
   portfolioAssets PortfolioAsset[]
+  transactions    PortfolioTransaction[]
 
   @@map("assets")
 }
@@ -24,7 +28,7 @@ model PortfolioAsset {
   id           String   @id @default(uuid())
   userId       String   @map("user_id")
   assetId      String   @map("asset_id")
-  quantity     Int
+  quantity     Decimal
   averagePrice Decimal  @map("average_price")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -33,4 +37,23 @@ model PortfolioAsset {
 
   @@unique([userId, assetId])
   @@map("portfolio_assets")
+}
+
+model PortfolioTransaction {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  assetId       String   @map("asset_id")
+  type          String
+  quantity      Decimal
+  unitPrice     Decimal  @map("unit_price")
+  costs         Decimal  @default(0)
+  totalAmount   Decimal  @map("total_amount")
+  operationDate DateTime @map("operation_date")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  asset Asset @relation(fields: [assetId], references: [id])
+
+  @@index([userId, operationDate])
+  @@index([assetId])
+  @@map("portfolio_transactions")
 }
